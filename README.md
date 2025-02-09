@@ -1,4 +1,4 @@
-# OS Project
+# OS Projects
 
 This repository contains three **Operating System-related** projects implemented in **Java**:
 
