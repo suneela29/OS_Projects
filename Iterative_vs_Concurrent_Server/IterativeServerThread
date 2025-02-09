@@ -1,0 +1,41 @@
+package server;
+
+import java.io.*;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class IterativeServerThread extends Thread {
+    private Socket socket;
+    private String threadID;
+
+    public IterativeServerThread(Socket socket, String threadID) {
+        this.socket = socket;
+        this.threadID = threadID;
+    }
+
+    public void run() {
+        try {
+            BufferedReader inputFromClient = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter outputToClient = new PrintWriter(socket.getOutputStream(), true);
+
+            long startTime = System.currentTimeMillis();
+            int total = 0;
+
+            for (int i = 0; i < 900000; i++) {
+                total += i;
+            }
+
+            outputToClient.println(total);
+
+            long finishTime = System.currentTimeMillis();
+            long delay = finishTime - startTime;
+            System.out.println("Thread " + threadID + " delay: " + delay);
+
+            outputToClient.println(finishTime);
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

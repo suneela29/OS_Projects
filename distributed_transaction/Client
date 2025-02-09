@@ -1,0 +1,49 @@
+package client;
+
+import java.io.*;
+import java.net.*;
+
+public class Client {
+ public static void main(String[] args) {
+     try {
+         Socket socket = new Socket("localhost", 8000);
+         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+         // Start a distributed transaction
+         out.writeObject("START");
+         out.flush();
+         String result = (String)in.readObject();
+         System.out.println("Transaction started: " + result);
+
+         // Perform some work as part of the transaction
+         out.writeObject("UPDATE");
+         out.flush();
+         result = (String)in.readObject();
+         System.out.println("Work done: " + result);
+
+         // Prepare to commit the transaction
+         out.writeObject("PREPARE");
+         out.flush();
+         result = (String)in.readObject();
+         System.out.println("Transaction prepared: " + result);
+
+         // Commit the transaction
+         out.writeObject("COMMIT");
+         out.flush();
+         result = (String)in.readObject();
+         System.out.println("Transaction committed: " + result);
+
+         // Close the connection
+         out.writeObject("CLOSE");
+         out.flush();
+         socket.close();
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+ }
+}
+
+
+
+

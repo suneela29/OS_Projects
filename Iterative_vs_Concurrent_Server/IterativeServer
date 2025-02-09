@@ -1,0 +1,22 @@
+package server;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class IterativeServer {
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(8000);
+
+            for (int i = 1; i <= 80; i++) {
+                String threadID = "thread" + i;
+                new IterativeServerThread(serverSocket.accept(), threadID).start();
+            }
+
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}

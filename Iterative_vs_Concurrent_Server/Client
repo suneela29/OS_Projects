@@ -1,0 +1,38 @@
+package client;
+
+import java.io.IOException;
+import java.net.Socket;
+
+public class Client {
+    public static void main(String[] args) {
+        System.out.println("My name is Suneela Paluru");
+
+        for (int i = 1; i <= 80; i++) {
+            String threadID = "thread" + i;
+            SubClient subClient = new SubClient(threadID);
+            subClient.start();
+        }
+    }
+}
+
+class SubClient extends Thread {
+    private String threadID;
+
+    public SubClient(String threadID) {
+        this.threadID = threadID;
+    }
+
+    public void run() {
+        boolean connected = false;
+        while (!connected) {
+            try {
+                Socket socket = new Socket("localhost", 8000);
+                System.out.println(threadID + " connected to server");
+                connected = true;
+                socket.close();
+            } catch (IOException e) {
+                // Connection refused, keep trying
+            }
+        }
+    }
+}
